@@ -1,0 +1,82 @@
+@import "../base/settings.scss";
+
+.mt-150 {
+  margin-top: 150px;
+}
+
+.form-container {
+  width: 70%;
+  margin: 0 auto;
+  border-left: 4px solid $blue;
+  background: #f2f2f2;
+  padding: 15px;
+}
+
+.signup-title {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.email-prompt {
+  text-align: center;
+}
+
+.submit-button {
+  padding: 5px;
+}
+
+@media (min-width: 426px) {
+  .input-cont {
+    width: 30%;
+  }
+}
+
+input[type="email"] {
+  height: 20px;
+  width: 40%;
+}
+@media (min-width: 426px) {
+  .btn-cont-signup {
+    display: flex;
+    justify-content: space-between;
+    width: 75%;
+  }
+  .submit-button {
+    width: 35%;
+    background: green;
+    color: white;
+    border-radius: 15px;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 425px) {
+  .submit-button {
+    width: 100%;
+    background: green;
+    color: white;
+    border-radius: 15px;
+    margin-top: 15px;
+  }
+
+  .btn-cont {
+    width: 80%;
+    display: block;
+  }
+
+  .input-cont {
+    width: 100%;
+  }
+}
+
+.alert {
+  color: red;
+  text-align: center;
+}

@@ -1,0 +1,120 @@
+@import "../base/settings.scss";
+
+.instructions {
+  border: 1px solid darken($off-white, 10%);
+  border-radius: 5px;
+  margin: 0 auto;
+  width: 80%;
+  padding: $sm $lg;
+  opacity: 90%;
+
+  .text-center,
+  .title-text {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .instructions-text {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  h1 {
+    color: $off-black;
+    font-size: $md;
+    text-align: center;
+  }
+
+  .lifeline {
+    position: relative;
+    top: -3px;
+  }
+
+  .lifeline-icon {
+    color: $green;
+    cursor: pointer;
+  }
+
+  .img-cont {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .buttons-cont {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 10px;
+  }
+
+  .choice-btn {
+    width: 25%;
+    border-radius: 15px;
+    background: green;
+    padding: 10px;
+  }
+
+  .link {
+    color: white;
+    text-decoration: none;
+  }
+
+  .browser-default {
+    padding-left: 30px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+
+  img {
+    width: 80%;
+    height: 50%;
+  }
+
+  #main-list li {
+    list-style: none;
+    text-align: center;
+  }
+}
+
+@media (max-width: 425px) {
+  .instructions img {
+    width: 100% !important;
+    height: 150% !important;
+  }
+
+  .title-text {
+    font-size: 15px;
+  }
+
+  .choice-btn {
+    width: 100%;
+    display: none;
+  }
+
+  #main-list li {
+    display: none;
+  }
+
+  .choice-btn-sm {
+    display: block;
+    width: 100%;
+    background: green;
+    margin-top: 10px;
+  }
+
+  .instructions-text p {
+    font-size: 10px;
+  }
+
+  .instructions {
+    width: 100%;
+  }
+}
+
+@media (min-width: 426px) {
+  .choice-btn-sm {
+    display: none;
+  }
+}

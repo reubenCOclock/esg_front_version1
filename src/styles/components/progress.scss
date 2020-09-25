@@ -1,0 +1,25 @@
+@media (min-width: 426px) {
+  .progress-box-cont {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .result-box-cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 425px) {
+  .progress-box-cont {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .result-box-cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

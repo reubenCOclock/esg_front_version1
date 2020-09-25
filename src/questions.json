@@ -1,0 +1,62 @@
+[
+    {
+        "question": "Jugez-vous important que les entreprises réduisent leurs émissions de carbone ?",
+        "optionA": "Oui",
+        "optionB": "Non",
+        "optionC": "Peut-être",
+        "optionD": "Je ne sais pas",
+        "answer": "Oui"
+    },
+
+    {
+        "question": "Souhaitez-vous investir dans une entreprise qui conduit et communiques sur des actions en faveur de la réduction de ses émissions ?",
+        "optionA": "Oui",
+        "optionB": "Non",
+        "optionC": "Peut-être",
+        "optionD": "Je ne sais pas",
+        "answer": "Oui"
+    },
+
+    {
+        "question": "La gestion des déchets est-elle selon vous un problème qui doit être essentiellement traité ?",
+        "optionA": "Oui",
+        "optionB": "Non",
+        "optionC": "Peut-être",
+        "optionD": "Je ne sais pas",
+        "answer": "Oui"
+    },
+    {
+        "question": "Etes-vous contre le nucléaire ? ",
+        "optionA": "Oui",
+        "optionB": "Non",
+        "optionC": "Peut-être",
+        "optionD": "Je ne sais pas",
+        "answer": "Oui"
+    },
+    {
+        "question": "Vous opposez-vous aux OGM ?",
+        "optionA": "Oui",
+        "optionB": "Non",
+        "optionC": "Peut-être",
+        "optionD": "Je ne sais pas",
+        "answer": "Oui"
+    },
+    {
+        "question": "Vous opposez-vous aux pesticides ?",
+        "optionA": "Oui",
+        "optionB": "Non",
+        "optionC": "Peut-être",
+        "optionD": "Je ne sais pas",
+        "answer": "Oui"
+    },
+    {
+        "question": "Etes-vous particulièrement sensible à la cause animale ?",
+        "optionA": "Oui",
+        "optionB": "Non",
+        "optionC": "Peut-être",
+        "optionD": "Je ne sais pas",
+        "answer": "Oui"
+    }
+
+  
+]

@@ -1,0 +1,407 @@
+@import "../base/settings.scss";
+
+.link {
+  text-decoration: none;
+}
+
+.w-70 {
+  width: 75%;
+}
+
+.m-auto {
+  margin: 0 auto;
+}
+
+.align-self-start {
+  align-self: flex-start;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-15 {
+  margin-top: 15px;
+}
+
+.mt-30 {
+  margin-top: 30px;
+}
+
+.bg-grey {
+  background: #f2f2f2;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.flex-title {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 10px;
+}
+
+.box-container {
+  width: 75%;
+  margin: 0 auto;
+  border-left: 4px solid $blue;
+  height: 100%;
+  background: #f2f2f2;
+  margin-top: 5%;
+  padding: 20px;
+}
+
+.progress-box-cont {
+  width: 75%;
+  margin: 0 auto;
+}
+
+.stats-btn {
+  background: white;
+  color: black;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+@media (min-width: 426px) {
+  .result-box-cont {
+    width: 100%;
+  }
+
+  .h-fixed {
+    height: 75px;
+  }
+
+  .percentage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 25px;
+  }
+
+  .space-evenly {
+    display: flex;
+    justify-content: space-evenly;
+  }
+}
+
+.empty-answer-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text-red {
+  color: red;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.answer-text-cont {
+  margin-top: 10px;
+}
+.f-bold {
+  font-weight: bolder;
+}
+
+.generic-title {
+  display: flex;
+  justify-content: center;
+}
+
+.progression {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 10px;
+}
+
+.question-text {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 426px) {
+  .h-fixed {
+    height: 75px;
+  }
+  .question-content-text {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .main-quiz-box {
+    height: 150px;
+  }
+  .button-box {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .choice-button {
+    box-sizing: border-box;
+    width: 40%;
+    padding: 10px;
+    background: $blue;
+  }
+
+  .choice-button:focus {
+    outline: none;
+    background: $blue;
+  }
+
+  .choice-button .text-center {
+    text-align: center;
+    color: white;
+    padding: 1px;
+  }
+
+  .flex-btn-center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .choice-button-red {
+    box-sizing: border-box;
+    width: 40%;
+    padding: 10px;
+    background: lightcoral;
+    border-radius: 15px;
+    width: 30%;
+  }
+
+  .choice-button-red:focus {
+    background: lightcoral;
+  }
+
+  .choice-button-red .text-center {
+    text-align: center;
+    color: white;
+  }
+
+  .send-anyways-cont {
+    display: flex;
+    justify-content: center;
+  }
+
+  .send-anyways-btn {
+    background: salmon;
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+  }
+}
+
+@media (min-width: 426px) {
+  .indicator-title {
+    font-size: 25px;
+    font-weight: bold;
+  }
+  .send-btn-cont {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .send-btn {
+    padding: 10px;
+    width: 25%;
+    border-radius: 15px;
+    background: green;
+    color: white;
+  }
+}
+
+.choice-button span {
+  color: white;
+}
+.mt-15 {
+  margin-top: 15px;
+}
+
+.m-15 {
+  margin: 15px;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.br-50 {
+  border-radius: 15px;
+}
+@media (min-width: 426px) {
+  .progress-buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+}
+
+.p-10 {
+  padding: 10px;
+}
+@media (min-width: 426px) {
+  .previous {
+    background: grey;
+    span {
+      color: white;
+    }
+  }
+}
+
+.empty-answer-msg {
+  color: red;
+  text-align: center;
+}
+
+@media (min-width: 426px) {
+  .next {
+    background: green;
+    span {
+      color: white;
+    }
+  }
+}
+
+.exit-box-cont {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+.exit-box {
+  color: red;
+}
+
+.instructions {
+  text-align: center;
+}
+
+.answer-text-cont {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.warning-cont {
+  display: flex;
+  justify-content: center;
+}
+
+.warning-text {
+  color: red;
+}
+
+.answer-text {
+  font-weight: bold;
+  color: green;
+}
+
+.fs-18 {
+  font-size: 18px;
+}
+
+@media (max-width: 425px) {
+  .w-70 {
+    width: 70%;
+  }
+  .box-container {
+    width: 100%;
+  }
+
+  .progress-box-cont {
+    width: 100%;
+  }
+  .result-box-cont {
+    display: block;
+  }
+
+  .space-evenly {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .choice-button {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .choice-button:focus {
+    background: $blue;
+  }
+
+  .percentage {
+    margin-top: 10px;
+    margin-right: 10px;
+    font-weight: bold;
+  }
+
+  .question-text {
+    width: 100%;
+    margin-top: 0px;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .progress-buttons {
+    display: block;
+  }
+
+  .previous {
+    width: 100%;
+    background: green;
+    margin-top: 5px;
+    color: white;
+  }
+
+  .next {
+    width: 100%;
+    background: green;
+    margin-top: 5px;
+    color: white;
+  }
+
+  .send-btn-cont {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .send-btn {
+    padding: 10px;
+    width: 100%;
+    border-radius: 15px;
+    background: green;
+    color: white;
+  }
+
+  .button-box {
+    display: block;
+  }
+
+  .choice-button {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    background: $blue;
+    margin: 0 auto;
+    margin-top: 10px;
+    outline-style: none;
+  }
+}

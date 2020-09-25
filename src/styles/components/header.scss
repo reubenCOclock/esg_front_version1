@@ -1,0 +1,124 @@
+@import "../base/settings.scss";
+@media (min-width: 1000px) {
+  .header {
+    width: 100%;
+    background: lightblue;
+    height: 50px;
+  }
+
+  .header-responsive {
+    display: none;
+  }
+
+  .topnav {
+    display: none;
+  }
+
+  .flex-items-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .flex-li-items {
+    display: flex;
+    justify-content: space-evenly;
+    width: 30%;
+    line-height: 50px;
+  }
+
+  .esg-title {
+    line-height: 50px;
+    font-size: 25px;
+    color: white;
+    margin-left: 10px;
+  }
+
+  .link {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+}
+
+@media (max-width: 999px) {
+  .header {
+    display: none;
+  }
+  .header-responsive {
+    display: block;
+    width: 100%;
+    background: lightblue;
+    height: 50px;
+  }
+
+  .flex-items-header-responsive {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .topnav {
+    display: block;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .topnav #myLinks {
+    display: none;
+  }
+
+  .topnav a {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+  }
+
+  /* Style the hamburger menu */
+  .topnav a.icon {
+    background: lightblue;
+    display: block;
+    height: 50px;
+  }
+
+  /* Add a grey background color on mouse-over */
+  .topnav a:hover {
+    background-color: $blue;
+    color: black;
+  }
+
+  /* Style the active link (or home/logo) */
+  .active {
+    background-color: lightblue;
+    height: 0px;
+  }
+
+  .navigation {
+    display: block;
+  }
+  .flex-li-items {
+    display: none;
+    text-align: center;
+  }
+  .esg-title {
+    font-size: 16px;
+    color: white;
+    line-height: 50px;
+  }
+
+  .link {
+    color: white;
+  }
+
+  .link-list {
+    width: 100%;
+    background: black;
+    z-index: 1;
+    position: relative;
+  }
+
+  /*
+ * Just a quick hamburger
+ */
+}

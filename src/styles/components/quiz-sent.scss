@@ -1,0 +1,138 @@
+@import "../base/settings.scss";
+
+.container {
+  width: 70%;
+  margin: 0 auto;
+  border-left: 4px solid $blue;
+  height: 100%;
+  background: #f2f2f2;
+  margin-top: 10%;
+}
+
+.opinion-sent-msg {
+  color: green;
+}
+
+.form-container {
+  background: #f2f2f2;
+  margin: 0 auto;
+  width: 70%;
+  padding: 15px;
+}
+.flex-text-area {
+  display: flex;
+  justify-content: center;
+}
+.textarea {
+  width: 70%;
+  margin: 0 auto;
+  height: 150px;
+  padding: 10px;
+  margin-top: 15px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.fs-18 {
+  font-size: 18px;
+}
+
+.fs-20 {
+  font-size: 20px;
+}
+
+.quiz-sent-cont {
+  display: flex;
+  justify-content: center;
+}
+
+.result-box {
+  border: 2px solid $blue;
+  margin: 0 auto;
+  width: 70%;
+  background: #f2f2f2;
+  padding: 20px;
+  margin-top: 10%;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.score-results {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.btn-cont {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10px;
+}
+@media (min-width: 426px) {
+  .send-opinion-btn {
+    width: 25%;
+    padding: 10px;
+    background: green;
+    border-radius: 15px;
+    color: white;
+  }
+  .title-responsive {
+    font-size: 25px;
+  }
+  .quiz-sent-msg {
+    color: green;
+    font-size: 35px;
+  }
+  .score-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+  }
+
+  .score {
+    display: flex;
+    justify-content: center;
+    width: 30%;
+  }
+}
+
+@media (max-width: 425px) {
+  .send-opinion-btn {
+    width: 70%;
+    padding: 10px;
+    background: green;
+    border-radius: 15px;
+    color: white;
+  }
+  .title-responsive {
+    font-size: 12px;
+  }
+  .quiz-sent-msg {
+    font-size: 8px;
+    color: green;
+  }
+
+  .align-center {
+    font-size: 12px;
+  }
+  .score-box {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.font-bold {
+  font-weight: bold;
+}

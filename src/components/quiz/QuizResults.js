@@ -24,27 +24,33 @@ const QuizResults = () => {
   const [opinionSent, setOpinionSent] = useState(false);
 
   const getPillars = async () => {
+    // recuperation des pilliers E,S et G
     const getPillars = await axios.get(
       "http://localhost:3000/pillar/v1/getPillars"
     );
-    //console.log(getPillars.data);
+
     return getPillars.data;
   };
 
   const getCategoryScoresByPillar = async (pillars) => {
-    //console.log(pillars);
+    // recuperation des pillars en parametre et initalisation d'un tableau vide
+    // je cree un tableau vide
     const pillarScoresArray = [];
+    // en bouclant sur les pillars, je fais appel et recupere les donées des categories associé a chaque pillar dans la boucle
     for (let i = 0; i < pillars.length; i++) {
+      // je crée une variable sum en l'initialisant a zero
       let sum = 0;
       const pillarSummary = await axios.get(
         "http://localhost:3000/quiz/v1/getCategoryScoresByPillar/" +
           pillars[i].id
       );
 
-      //console.log(pillarSummary.data);
+      // dans une boucle imbriqué representant les informations pour chaque categorie j'incremente le sum de chaque categorie pour arriver a un numero total
       for (let j = 0; j < pillarSummary.data.length; j++) {
         sum += pillarSummary.data[j].weight;
       }
+
+      // dans la premiere boucle je cree un objet qui contient l'agregat des poids de la categorie,les donées sur la categorie en cours et le nom du pillar auxquelles la categorie est associé et j'alimente le tableau pillarScoresArray avec cette objet
       sum = Number(sum.toFixed(2));
       pillarScoresArray.push({
         sum: sum,
@@ -52,20 +58,24 @@ const QuizResults = () => {
         pillar: pillars[i].pillar_name,
       });
     }
+    // je retourne le tableau d'objets
     return pillarScoresArray;
   };
 
   const determineCategoryScores = (pillarScores) => {
+    // en prenant en parametre le tableau d'objets qui contiennent les informations sur les categories, je cree un tableau cide
     const categoryScoresSummary = [];
     for (let i = 0; i < pillarScores.length; i++) {
       var categoryScoresByPillar = [];
-
+      // je cree une boucle imriqué sur les informations des categories asscociés aux pillars
       for (let j = 0; j < pillarScores[i].categoryScores.data.length; j++) {
+        // je crée une variable representant le poids de la category divisé par le l'agregat de la categorie pour standardise
         let weight =
           pillarScores[i].categoryScores.data[j].weight / pillarScores[i].sum;
+        // je multiplie le "score" del a categorie, respresenté par proportion multiplié par le poids relatif de la categorie
         let proportion =
           pillarScores[i].categoryScores.data[j].proportion * weight;
-
+        // je cree un tableau contenant le "score" de la category qui est representé par la clé categoryProportion qui standardise le score associé a la categorie par son poids relatif par rapport a l'agregat du poids de la cateogire
         categoryScoresByPillar.push({
           proportion: proportion,
           categoryProportion: proportion / weight,
@@ -73,29 +83,34 @@ const QuizResults = () => {
           category: pillarScores[i].categoryScores.data[j].name,
         });
       }
-
+      // j'alimente le tableau avec les informations de la categorie en cours dans la boucle
       categoryScoresSummary.push({ categoryArray: categoryScoresByPillar });
     }
-
+    // je retourne le tableau
     return categoryScoresSummary;
   };
 
   const determinePillarScores = async (categoryScores, quizTour) => {
+    // je recupere le tableau contenant les informations sur les categories retourné par la fonction "determineCategoryScores" et je cree un tableau vide pillarScoresArray
     const pillarScoresArray = [];
     let pillar;
     let pillarScoreArray;
     for (let i = 0; i < categoryScores.length; i++) {
+      //je cree une variable score et je l'initialise a zero
       let score = 0;
 
       for (let j = 0; j < categoryScores[i].categoryArray.length; j++) {
+        // j'incremente la variable score par le score individuelle de la categorie pour arriver au score du pillar
         score += categoryScores[i].categoryArray[j].proportion;
         pillar = categoryScores[i].categoryArray[j].pillar;
       }
+      // j'ailiente le tableau
       pillarScoresArray.push({
         pillar: pillar,
         score: score,
       });
     }
+    // j'insere les informations dans la bdd
     for (let i = 0; i < pillarScoresArray.length; i++) {
       await axios.post(
         "http://localhost:3000/quiz/v1/insertPillarQuizScores/" + quizTour,
@@ -105,7 +120,7 @@ const QuizResults = () => {
         }
       );
     }
-
+    // je retourne le tableau
     return pillarScoresArray;
   };
 
@@ -122,32 +137,28 @@ const QuizResults = () => {
 
   const getData = async () => {
     setIsLoading(false);
-
+    // recuperation des pillars
     const getPillarInformation = await getPillars();
+    // appel a la fonction getPillarScores avec les informations des pillars en parametre,creation du tableau qui crée les informations sur les categories
     const getPillarScores = await getCategoryScoresByPillar(
       getPillarInformation
     );
 
-    //console.log("here are the category scores");
-    //console.log(getPillarScores);
-
-    //const getCriteriaWeights = await getDataWeights(currentUser);
-
+    // determination des "scores" pour chaque categorie en mettant en parametre le tableau des pillars
     const getCategoryScoreInformation = await determineCategoryScores(
       getPillarScores
     );
 
-    console.log("here is the category score information");
-    console.log(getCategoryScoreInformation);
-
+    //console.log("here is the category score information");
+    //console.log(getCategoryScoreInformation);
+    // creation de l'etat
     setCategoryScores(getCategoryScoreInformation);
 
     const getQuizTour = await axios.get(
       "http://localhost:3000/quiz/v1/findQuizTour/" + currentUser
     );
 
-    //console.log("quiz tour information");
-    //console.log(getQuizTour);
+    //a partir des donées sur les categories je determine les scores pour les pillars associé aux categories en agregat les "scores" des categories contenu dans le tableau "getCategoryScoreInformation"
     const getFinalPillarScores = await determinePillarScores(
       getCategoryScoreInformation,
       getQuizTour.data.id
@@ -155,7 +166,7 @@ const QuizResults = () => {
 
     //console.log("here is the pillar score information");
     //console.log(getFinalPillarScores);
-
+    // creation de l'etat
     setFinalPillarScores(getFinalPillarScores);
 
     const getAggregateScore = await getAggregateQuizScores();
@@ -171,10 +182,6 @@ const QuizResults = () => {
   useEffect(() => {
     getData();
   }, []);
-  //console.log("state pillar scores");
-  //console.log(finalPillarScores);
-  //console.log("state category scores");
-  //console.log(categoryScores);
 
   if (isLoading == false) {
     return (

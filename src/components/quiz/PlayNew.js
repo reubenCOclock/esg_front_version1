@@ -11,18 +11,6 @@ const PlayNew = () => {
 
   let currentUserToken = sessionStorage.getItem("token");
 
-  const setFullCriteriaText = (criteria) => {
-    if (criteria == "E") {
-      return "Environment";
-    } else if (criteria == "S") {
-      return "Social";
-    } else if (criteria == "G") {
-      return "Gouvernance";
-    } else {
-      return false;
-    }
-  };
-
   let history = useHistory();
   // definition des etats initiaux
   const [questions, setQuestions] = useState([]);
@@ -71,6 +59,7 @@ const PlayNew = () => {
   };
 
   const insertAnswer = async (quizTourId, questionId, answer) => {
+    // insertion d'une question dans la bdd qui correspond a un quiz,une question avec le corps du contenu de la response en "body"
     try {
       const insertedAnswer = await axios.post(
         "http://localhost:3000/answer/v1/insert/" +
@@ -109,16 +98,17 @@ const PlayNew = () => {
     const categoryList = await axios.get(
       "http://localhost:3000/categories/v1/getCategories"
     );
-    //console.log("here is the category list");
+
+    //je recupere toutes les categories et je boucle dessus
+
     for (let i = 0; i < categoryList.data.length; i++) {
+      // dans la boucle je recupere les questions associé a la categorie
       const getAssociatedQuestions = await axios.get(
         "http://localhost:3000/question/v1/getQuestions/" +
           categoryList.data[i].name
       );
-      //console.log("here are the associated questions");
-      //console.log(getAssociatedQuestions);
+      // dans une boucle imbriqué sur les questions associé aux categories, je construit le tableau questionsArray en mettant les questions associés
       for (let j = 0; j < getAssociatedQuestions.data.length; j++) {
-        //console.log(getAssociatedQuestions.data[j]);
         questionsArray.push(getAssociatedQuestions.data[j]);
       }
     }
@@ -148,10 +138,7 @@ const PlayNew = () => {
       setQuestionCounter(parseInt(sessionStorage.getItem("questionOrder")));
       sessionStorage.removeItem("questionOrder");
     }
-
-    //console.log("taggedQuestions");
-    //console.log(checkIfTaggedQuestions);
-
+    // si il n'y a pas de responses et si le quiz n'a pas encore commencé, j'initialise les questions et je les mets dans le session storage
     if (
       checkIfAnswers.data.length == 0 &&
       checkIfTaggedQuestions.data.length == 0 &&
@@ -162,13 +149,10 @@ const PlayNew = () => {
       questionsArray = JSON.parse(sessionStorage.getItem("questions"));
       setQuestions(questionsArray);
     } else {
+      // sinon je recupere les questions existantes du quiz
       questionsArray = JSON.parse(sessionStorage.getItem("questions"));
       setQuestions(questionsArray);
     }
-
-    // recupereation de l'utilisateur en cours
-
-    // recuperation du dernier quiz lié a l'utilisateur (vu que l'insertion a été fait dans le composant precedante, on appel la meme route que ca soit un nouveau quiz ou un quiz deja existant)
 
     // recuperation de toutes les reponses a un quiz en particulier en utilisant la variable "currentQuiz"
     const answersByQuizTour = await axios.get(
@@ -190,7 +174,7 @@ const PlayNew = () => {
     const getReliability = await ScoreReliability(currentUser);
     setScoreReliability(getReliability);
   };
-
+  // a chaque fois que l'etat du questionCounter, je refais appel a la fonction getData
   useEffect(() => {
     getData();
   }, [questionCounter]);
@@ -245,6 +229,7 @@ const PlayNew = () => {
           </div>
           {emptyAnswers.length > 0 ? (
             <div class="empty-answers-cont">
+              {/*
               <div class="send-anyways-cont">
                 <button class="send-anyways-btn">
                   {" "}
@@ -254,13 +239,14 @@ const PlayNew = () => {
                   </Link>
                 </button>
               </div>
+              */}
               <p class="empty-answer-msg">
                 {/* au cas ou il y aurai des questions vides, un message indiquant le nombres de questions non repondu s'affiche*/}
                 Vous n'avez pas repondu aux questions suivantes. Si vous voulez
                 quand meme envoyer votre questionnaire cliquez sur le boutons au
                 dessus
               </p>
-              {/* je boucle sur les questions pour afficher toutes les questions auxquelles je n'ai pas repondu*/}
+              {/* je boucle sur les questions pour afficher toutes les questions auxquelles l'utilisateur n'a pas repondu*/}
               {emptyAnswers.map((element) => {
                 return (
                   <>
@@ -286,6 +272,7 @@ const PlayNew = () => {
               {questions[questionCounter - 1].content}
             </span>
           </div>
+          {/*
           <div class="flex-btn-center">
             <button class="text-center stats-btn">
               {" "}
@@ -298,6 +285,7 @@ const PlayNew = () => {
               </Link>{" "}
             </button>
           </div>
+              */}
 
           <div class="button-box mt-30">
             {/* affichage des reponses possibles aux questions */}
@@ -313,20 +301,12 @@ const PlayNew = () => {
                       );
                     }
 
-                    //console.log(questions[questionCounter - 1]);
-
                     //recuperation de la question et du quiz actuelle en cours
 
                     const questionId = questions[questionCounter - 1].id;
                     const quizTourId = quizTour.id;
-
+                    // mise a jour du question order
                     await checkQuestionCounterValue(questionCounter, questions);
-
-                    //console.log("here is the question id");
-                    //console.log(questionId);
-
-                    //console.log("here is the quiz tour id");
-                    //console.log(quizTourId);
 
                     // verification si il y a deja une reponse a cette question
                     let currentAnswer = await getQuizAnswer(
@@ -334,7 +314,6 @@ const PlayNew = () => {
                       questionId
                     );
 
-                    //console.log(currentAnswer);
                     // si il y a deja une reponse precendate
                     if (currentAnswer.rowCount != 0) {
                       // je mets a jour la reponse dans la bdd
@@ -354,9 +333,9 @@ const PlayNew = () => {
 
                       newAnswersArr.push(updatedAnswer);
 
-                      //j'etabli l'etat
+                      //j'etabli l'etat des reponses au quiz
                       setQuizAnswers(newAnswersArr);
-
+                      // si le quiz n'est pas encore envoyé et si je suis pas sur la derniere question, je passe a la question suivante
                       if (!quizSent) {
                         if (questionCounter != questions.length) {
                           setQuestionCounter(questionCounter + 1);
@@ -371,8 +350,6 @@ const PlayNew = () => {
                         questionId,
                         element
                       );
-                      //console.log("here is the new answer");
-                      //console.log(newAnswer);
 
                       const quizAnswersCopy = [...quizAnswers];
                       //j'ajoute la reponse aux tableaux des reponses
@@ -414,39 +391,6 @@ const PlayNew = () => {
               );
             })}
           </div>
-          {/*
-          <div class="flex-btn-center">
-            <button
-              class="choice-button-red"
-              onClick={async () => {
-                //console.log("unclear button clicked");
-                
-                const isAlreadyTaggedByUser = await axios.get(
-                  "http://localhost:3000/findUnclearAnswer/" +
-                    currentUser +
-                    "/" +
-                    questions[questionCounter - 1].id
-                );
-                
-
-                await axios.post(
-                  "http://localhost:3000/insertIntoUnclearQuestion/" +
-                    currentUser +
-                    "/" +
-                    quizTour.id +
-                    "/" +
-                    questions[questionCounter - 1].id
-                );
-
-                await checkQuestionCounterValue(questionCounter, questions);
-
-                if (questionCounter != questions.length) {
-                  setQuestionCounter(questionCounter + 1);
-                }
-              }}
-            ></button>
-          </div>
-            */}
 
           <div class="mt-15 progress-buttons">
             <button
@@ -463,6 +407,7 @@ const PlayNew = () => {
 
             <button
               onClick={async () => {
+                // si l'utilisateur clique sur le bouton question suivante, le quiz sera automatiquement commencé
                 if (quizTour.is_started == false) {
                   await axios.post(
                     "http://localhost:3000/quiz/v1/updateQuizStarted/" +
@@ -491,7 +436,6 @@ const PlayNew = () => {
                 onClick={async () => {
                   // je dis que le quiz a bien ete envoyé
 
-                  //console.log("question counter====" + questionCounter);
                   setQuizSent(true);
 
                   checkQuestionCounterValue(questionCounter, questions);
@@ -500,11 +444,7 @@ const PlayNew = () => {
                     "http://localhost:3000/answer/v1/emptyAnswersByQuizTour/" +
                       currentUser
                   );
-                  console.log("here are the empty answers");
-                  console.log(emptyAnswersByQuizTour);
 
-                  //console.log("here are the empty answers");
-                  //console.log(emptyAnswersByQuizTour);
                   // si il n'y a pas de reponse vide je redigere pour voir les resultats
                   if (emptyAnswersByQuizTour.data.length == 0) {
                     history.push("/quiz/results");
@@ -531,8 +471,6 @@ const PlayNew = () => {
                     "http://localhost:3000/answer/v1/emptyAnswersByQuizTour/" +
                       currentUser
                   );
-                  //console.log("here are the empty answers");
-                  //console.log(emptyAnswersByQuizTour);
 
                   if (emptyAnswersByQuizTour.data.length == 0) {
                     history.push("/quiz/results");

@@ -14,6 +14,7 @@ import ScoreReliability from "./components/quiz/ScoreReliability";
 import QuestionStatistics from "./components/quiz/QuestionStatistics";
 import Inscription from "./components/quiz/Inscription";
 import Connexion from "./components/quiz/Connexion";
+import QuizResults from "./components/quiz/QuizResults";
 
 function App() {
   return (
@@ -27,10 +28,11 @@ function App() {
           <Route path="/signup" exact component={Inscription} />
           <Route path="/play/quiz/:questionOrder?" exact component={PlayNew} />
           <Route path="/play/quizSummary" exact component={QuizSummary} />
-          <Route path="/quizresults" exact component={QuizSent} />
+
           <Route path="/about" exact component={About} />
           <Route path="/test-reliability" exact component={ScoreReliability} />
           <Route path="/signin" exact component={Connexion} />
+          <Route path="/quiz/results" exact component={QuizResults} />
 
           <Route
             path="/question-stats/:questionId/:questionOrder"

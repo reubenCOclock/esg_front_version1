@@ -8,6 +8,7 @@ import ScoreReliability from "./ScoreReliability";
 
 const PlayNew = () => {
   let currentUser = sessionStorage.getItem("user");
+
   let currentUserToken = sessionStorage.getItem("token");
 
   const setFullCriteriaText = (criteria) => {
@@ -28,12 +29,7 @@ const PlayNew = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [questionCounter, setQuestionCounter] = useState(1);
   const [quizTour, setQuizTour] = useState([]);
-  const [answersChoice, setAnswerChoice] = useState([
-    "oui",
-    "peut etre",
-    "non",
-    "je ne sais pas",
-  ]);
+  const [answersChoice, setAnswerChoice] = useState(["yes", "no"]);
   const [quizAnswers, setQuizAnswers] = useState([]);
   const [emptyAnswers, setEmptyAnswers] = useState([]);
   const [quizSent, setQuizSent] = useState(false);
@@ -45,7 +41,7 @@ const PlayNew = () => {
 
   const checkQuestionCounterValue = async (counter, questions) => {
     await axios.post(
-      "http://localhost:3000/insertQuestionOrder/" +
+      "http://localhost:3000/question/v1/insertOrder/" +
         counter +
         "/" +
         questions[counter - 1].id
@@ -66,18 +62,28 @@ const PlayNew = () => {
   const getQuizAnswer = async (quizTourId, answerId) => {
     // appel a la fonction visant a recuperer une reponse selon un quiz un particulier
     const quizAnswer = await axios.get(
-      "http://localhost:3000/getAnswer/" + quizTourId + "/" + answerId
+      "http://localhost:3000/answer/v1/getQuizAnswer/" +
+        quizTourId +
+        "/" +
+        answerId
     );
     return quizAnswer.data;
   };
 
   const insertAnswer = async (quizTourId, questionId, answer) => {
+    try {
+      const insertedAnswer = await axios.post(
+        "http://localhost:3000/answer/v1/insert/" +
+          quizTourId +
+          "/" +
+          questionId,
+        { answer: answer }
+      );
+      return insertedAnswer.data;
+    } catch (error) {
+      console.log(error.message);
+    }
     // appel a la fonction pour inserer une reponse en bdd selon le quiz, la question visé, et le contenu de la reponse qui dans ce cas est mis dans le corps de la requette
-    const insertedAnswer = await axios.post(
-      "http://localhost:3000/insertAnswer/" + quizTourId + "/" + questionId,
-      { answer: answer }
-    );
-    return insertedAnswer.data;
   };
 
   const updateAnswer = async (quizTourId, questionId, answer) => {
@@ -98,20 +104,43 @@ const PlayNew = () => {
     setQuestionCriteria(getQuestionCriteriaById.data);
   };
 
+  const getQuestionsByCategories = async () => {
+    let questionsArray = [];
+    const categoryList = await axios.get(
+      "http://localhost:3000/categories/v1/getCategories"
+    );
+    //console.log("here is the category list");
+    for (let i = 0; i < categoryList.data.length; i++) {
+      const getAssociatedQuestions = await axios.get(
+        "http://localhost:3000/question/v1/getQuestions/" +
+          categoryList.data[i].name
+      );
+      //console.log("here are the associated questions");
+      //console.log(getAssociatedQuestions);
+      for (let j = 0; j < getAssociatedQuestions.data.length; j++) {
+        //console.log(getAssociatedQuestions.data[j]);
+        questionsArray.push(getAssociatedQuestions.data[j]);
+      }
+    }
+
+    return questionsArray;
+  };
+
   const getData = async () => {
+    await getQuestionsByCategories();
     let questionsArray;
 
     const currentUser = sessionStorage.getItem("user");
     // recuperation de toutes les questions
     const checkIfAnswers = await axios.get(
-      "http://localhost:3000/checkIfQuizHasAnswers/" + currentUser
+      "http://localhost:3000/answer/v1/checkEmptyAnswers/" + currentUser
     );
 
     const checkIfTaggedQuestions = await axios.get(
       "http://localhost:3000/checkIfQuizHasTaggedAnswer/" + currentUser
     );
     const currentQuiz = await axios.get(
-      "http://localhost:3000/findQuizTour/" + currentUser,
+      "http://localhost:3000/quiz/v1/findQuizTour/" + currentUser,
       { headers: { authorization: "Bearer " + currentUserToken } }
     );
 
@@ -128,10 +157,8 @@ const PlayNew = () => {
       checkIfTaggedQuestions.data.length == 0 &&
       currentQuiz.data.is_started == false
     ) {
-      const questionList = await axios.get("http://localhost:3000/questions");
-      console.log("both criteria are met");
-      //setQuestions(questionList.data);
-      sessionStorage.setItem("questions", JSON.stringify(questionList.data));
+      const questionList = await getQuestionsByCategories();
+      sessionStorage.setItem("questions", JSON.stringify(questionList));
       questionsArray = JSON.parse(sessionStorage.getItem("questions"));
       setQuestions(questionsArray);
     } else {
@@ -145,7 +172,7 @@ const PlayNew = () => {
 
     // recuperation de toutes les reponses a un quiz en particulier en utilisant la variable "currentQuiz"
     const answersByQuizTour = await axios.get(
-      "http://localhost:3000/getAnswersByQuizTour/" + currentQuiz.data.id
+      "http://localhost:3000/answer/v1/getAnswers/" + currentQuiz.data.id
     );
 
     // utilisation des hooks pour etablir les etats.
@@ -252,17 +279,7 @@ const PlayNew = () => {
           ) : (
             <span> </span>
           )}
-          {questionCriteria ? (
-            <div class="criteria-holder text-center">
-              <span class="font-bold">
-                {" "}
-                Critere Mesuré:{" "}
-                {setFullCriteriaText(questionCriteria.ethical_code)}{" "}
-              </span>
-            </div>
-          ) : (
-            <span></span>
-          )}
+
           <div class="question-text mt-15 h-fixed">
             <span class="f-bold question-content-text">
               {/* affichage de la question actuelle selon la valeur de l'etat counter*/}
@@ -289,6 +306,13 @@ const PlayNew = () => {
                 <button
                   //au clique du bouton
                   onClick={async () => {
+                    if (quizTour.is_started == false) {
+                      await axios.post(
+                        "http://localhost:3000/quiz/v1/updateQuizStarted/" +
+                          quizTour.id
+                      );
+                    }
+
                     //console.log(questions[questionCounter - 1]);
 
                     //recuperation de la question et du quiz actuelle en cours
@@ -296,11 +320,21 @@ const PlayNew = () => {
                     const questionId = questions[questionCounter - 1].id;
                     const quizTourId = quizTour.id;
 
+                    await checkQuestionCounterValue(questionCounter, questions);
+
+                    //console.log("here is the question id");
+                    //console.log(questionId);
+
+                    //console.log("here is the quiz tour id");
+                    //console.log(quizTourId);
+
                     // verification si il y a deja une reponse a cette question
                     let currentAnswer = await getQuizAnswer(
                       quizTourId,
                       questionId
                     );
+
+                    //console.log(currentAnswer);
                     // si il y a deja une reponse precendate
                     if (currentAnswer.rowCount != 0) {
                       // je mets a jour la reponse dans la bdd
@@ -337,6 +371,8 @@ const PlayNew = () => {
                         questionId,
                         element
                       );
+                      //console.log("here is the new answer");
+                      //console.log(newAnswer);
 
                       const quizAnswersCopy = [...quizAnswers];
                       //j'ajoute la reponse aux tableaux des reponses
@@ -349,7 +385,7 @@ const PlayNew = () => {
                       if (quizSent == true) {
                         // je recupere toutes les reponses vides au quiz sachant que le tableau changera parce ce que on est dans un evenement ou on repond a une question
                         const findUpdatedEmptyQuizAnswers = await axios.get(
-                          "http://localhost:3000/emptyAnswersWithTaggedQuestions/" +
+                          "http://localhost:3000/answer/v1/emptyAnswersByQuizTour/" +
                             currentUser
                         );
 
@@ -378,19 +414,20 @@ const PlayNew = () => {
               );
             })}
           </div>
+          {/*
           <div class="flex-btn-center">
             <button
               class="choice-button-red"
               onClick={async () => {
                 //console.log("unclear button clicked");
-                /*
+                
                 const isAlreadyTaggedByUser = await axios.get(
                   "http://localhost:3000/findUnclearAnswer/" +
                     currentUser +
                     "/" +
                     questions[questionCounter - 1].id
                 );
-                */
+                
 
                 await axios.post(
                   "http://localhost:3000/insertIntoUnclearQuestion/" +
@@ -407,10 +444,10 @@ const PlayNew = () => {
                   setQuestionCounter(questionCounter + 1);
                 }
               }}
-            >
-              <div class="text-center"> cette question n'est pas clair</div>
-            </button>
+            ></button>
           </div>
+            */}
+
           <div class="mt-15 progress-buttons">
             <button
               onClick={() => {
@@ -428,19 +465,15 @@ const PlayNew = () => {
               onClick={async () => {
                 if (quizTour.is_started == false) {
                   await axios.post(
-                    "http://localhost:3000/updateQuizTourIsStarted/" +
+                    "http://localhost:3000/quiz/v1/updateQuizStarted/" +
                       quizTour.id
                   );
                 }
 
-                await checkQuestionCounterValue(questionCounter, questions);
                 // si je suis pas a la derniere question j'incremente la question actuelle
 
-                if (questionCounter == questions.length - 1) {
-                  await checkQuestionCounterValue(
-                    questionCounter - 1,
-                    questions
-                  );
+                if (questionCounter != questions.length - 1) {
+                  await checkQuestionCounterValue(questionCounter, questions);
                 }
                 if (questionCounter < questions.length) {
                   setQuestionCounter(questionCounter + 1);
@@ -464,15 +497,17 @@ const PlayNew = () => {
                   checkQuestionCounterValue(questionCounter, questions);
                   // je recupere toutes les questions auxquelles il n'y aurai potentiellement pas de reponse.
                   const emptyAnswersByQuizTour = await axios.get(
-                    "http://localhost:3000/emptyAnswersWithTaggedQuestions/" +
+                    "http://localhost:3000/answer/v1/emptyAnswersByQuizTour/" +
                       currentUser
                   );
-
                   console.log("here are the empty answers");
                   console.log(emptyAnswersByQuizTour);
+
+                  //console.log("here are the empty answers");
+                  //console.log(emptyAnswersByQuizTour);
                   // si il n'y a pas de reponse vide je redigere pour voir les resultats
                   if (emptyAnswersByQuizTour.data.length == 0) {
-                    history.push("/quizresults");
+                    history.push("/quiz/results");
                   }
                   // sinon je mets l'etat a jour avec toutes les questions vides auxquelles je n'aurai potentiellement pas repondu.
                   setEmptyAnswers(emptyAnswersByQuizTour.data);
@@ -493,14 +528,14 @@ const PlayNew = () => {
                   setQuizSent(true);
 
                   const emptyAnswersByQuizTour = await axios.get(
-                    "http://localhost:3000/emptyAnswersWithTaggedQuestions/" +
+                    "http://localhost:3000/answer/v1/emptyAnswersByQuizTour/" +
                       currentUser
                   );
-                  console.log("here are the empty answers");
-                  console.log(emptyAnswersByQuizTour);
+                  //console.log("here are the empty answers");
+                  //console.log(emptyAnswersByQuizTour);
 
                   if (emptyAnswersByQuizTour.data.length == 0) {
-                    history.push("/quizresults");
+                    history.push("/quiz/results");
                   }
                   setEmptyAnswers(emptyAnswersByQuizTour.data);
                 }}
@@ -519,7 +554,7 @@ const PlayNew = () => {
                   return (
                     // affichage de la reponse a la question en particulier.
                     <div class="answer-text">
-                      Votre reponse :{element.response}{" "}
+                      Your Answer :{element.content}{" "}
                     </div>
                   );
                 }

@@ -65,11 +65,28 @@
   text-align: center;
 }
 
-.score-results {
-  display: flex;
-  justify-content: space-evenly;
-  margin-top: 25px;
-  flex-wrap: wrap;
+@media (max-width: 427px) {
+  .score-results {
+    display: block;
+  }
+  .score-results-cont {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    border: 0.5px dotted black;
+  }
+
+  .align-self-score {
+    margin-left: 0px;
+  }
+
+  .font-bold {
+    font-weight: bold;
+  }
+
+  .padding-box {
+    padding: 5px;
+  }
 }
 
 .btn-cont {
@@ -79,6 +96,22 @@
   margin-top: 10px;
 }
 @media (min-width: 426px) {
+  .score-results {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 25px;
+  }
+  .score-results-cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 0.5px dotted black;
+  }
+
+  .padding-box {
+    padding: 10px;
+  }
+
   .send-opinion-btn {
     width: 25%;
     padding: 10px;

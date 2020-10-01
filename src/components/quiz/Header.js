@@ -26,7 +26,7 @@ const Header = () => {
   const getData = async () => {
     setIsLoading(false);
     const findUser = await axios.get(
-      "http://localhost:3000/findUserById/" + currentUser
+      "http://localhost:3000/user/v1/findUserById/" + currentUser
     );
     setCurrentUserObj(findUser.data);
 
@@ -38,7 +38,8 @@ const Header = () => {
   }, [refresh]);
   //console.log("here is the session storage information");
   //console.log(sessionStorage.getItem("user"));
-  //console.log(currentUserObj);
+  console.log("here is the current user information");
+  console.log(currentUserObj);
 
   if (isLoading == false) {
     if (currentUserObj.id) {

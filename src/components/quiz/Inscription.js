@@ -22,7 +22,7 @@ const Inscription = () => {
               event.preventDefault();
               console.log("form is submitted");
               const getUserRole = await axios.get(
-                "http://localhost:3000/findUserRole"
+                "http://localhost:3000/role/v1/getUserRole"
               );
 
               if (!email) {
@@ -56,7 +56,7 @@ const Inscription = () => {
               console.log("get user role");
 
               const newUser = await axios.post(
-                "http://localhost:3000/insertUser/",
+                "http://localhost:3000/user/v1/insert",
                 {
                   email: email,
                   role: getUserRole.data.id,

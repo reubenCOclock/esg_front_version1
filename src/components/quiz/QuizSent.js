@@ -26,21 +26,6 @@ const QuizSent = () => {
     );
     return dataWeights.data;
   };
-
-  /*
-  const setCriteriaCountFunction = async (criterias) => {
-    const criteriaCountCopy = [];
-    // cette fonction vise a recuperer l'aggreation de la ponderation pour les criteres groupés en E,S et G elle fait appel a la route coté back en bouclant sur le tableau des criteres
-    for (let i = 0; i < criterias.length; i++) {
-      const totalCountByCriteria = await axios.get(
-        "http://localhost:3000/getCriteriaTotal/" + criterias[i].ethical_code
-      );
-      criteriaCountCopy.push(totalCountByCriteria.data);
-    }
-    // je retourne les resultats
-    return criteriaCountCopy;
-  };
-  */
   const setCriteriaResultsFunction = async (criterias, currentUser) => {
     const criteriaResultsCopy = [];
 
@@ -177,81 +162,12 @@ const QuizSent = () => {
   const getData = async () => {
     setIsLoading(false);
 
-    const getCriteriaWeights = await getDataWeights(currentUser);
-
-    console.log("here are the citerias");
-    console.log(getCriteriaWeights);
+    //const getCriteriaWeights = await getDataWeights(currentUser);
 
     const getQuizTour = await axios.get(
       "http://localhost:3000/findQuizTour/" + currentUser,
       { headers: { authorization: "Bearer " + currentUserToken } }
     );
-
-    // appel a la fonction pour determine l'aggreation des ponderations en utilisant le tableau des criteres defini dans les etats.
-    /*
-    const criteriaCountResults = await setCriteriaCountFunction(
-      getCriteriaWeights
-    );
-
-    console.log("here are the criteria count results");
-    console.log(criteriaCountResults);
-    */
-
-    //recuperation du regroupements de la reponse, la question lié, et les datapoints associé pour effectuer le calcul neccesaire
-
-    const criteriaQuizResults = await setCriteriaResultsFunction(
-      getCriteriaWeights,
-      currentUser
-    );
-    console.log("here are the criteria quiz results");
-    console.log(criteriaQuizResults);
-
-    //determination des totaux basé sur la fonction precedante.
-
-    const getQuizResultsByCriteria = await calculateResultsSum(
-      criteriaQuizResults
-    );
-
-    console.log("here are the quiz results by criteria");
-    console.log(getQuizResultsByCriteria);
-
-    // allocation d'un pourcentage pour chaque critere
-
-    const getPercentageArray = calculateResultsPercentage(
-      getQuizResultsByCriteria,
-      getCriteriaWeights
-    );
-
-    console.log("here are the quiz results percentage");
-    console.log(getPercentageArray);
-
-    // calcul du total des trois criteres
-
-    const getTotal = calculateSum(getPercentageArray);
-
-    console.log("here is the total");
-    console.log(getTotal);
-
-    const finalPercentageAllocation = setPercentageAllocationFunction(
-      getPercentageArray,
-      getTotal,
-      getCriteriaWeights
-    );
-
-    console.log("here is the final percentage allocation");
-    console.log(finalPercentageAllocation);
-
-    // insertion des resultatns en bdd
-    const insertedQuizzes = await isQuizAlreadyInserted(
-      finalPercentageAllocation,
-      currentUser,
-      getQuizTour.data.id
-    );
-
-    console.log("here are the inserted quizzes");
-    console.log(insertedQuizzes);
-    //affectation de l'etat
-    setFinalQuizResults(insertedQuizzes);
 
     setQuizTour(getQuizTour.data);
   };
@@ -275,26 +191,7 @@ const QuizSent = () => {
             <div class="align-center font-bold fs-20">
               Voici La Distribution de votre profil ESG
             </div>
-            <div class="score-results">
-              {/*affichage des resultats */}
-              {finalQuizResults ? (
-                finalQuizResults.map((element) => {
-                  console.log(element);
-                  return (
-                    <div class="score-box">
-                      <div class="ethics-title font-bold fs-18">
-                        {element.ethical_criteria}{" "}
-                      </div>
-                      <div class="score">
-                        <span> {element.score} % </span>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <span> </span>
-              )}
-            </div>
+            <div class="score-results"></div>
           </div>
 
           <div class="form-container">

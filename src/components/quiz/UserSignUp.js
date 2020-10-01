@@ -9,6 +9,9 @@ const UserSignUp = () => {
 
   let currentUser = sessionStorage.getItem("user");
 
+  console.log("here is the current user");
+  console.log(currentUser);
+
   let currentUserToken = sessionStorage.getItem("token");
   //definition des etats, dans ce cas un email et un message d'erruer
   const [email, setEmail] = useState("");
@@ -28,7 +31,7 @@ const UserSignUp = () => {
                 // clique sur le bouton si l'utilisateur veux commencer un nouveau quiz
                 event.preventDefault();
                 await axios.post(
-                  "http://localhost:3000/insertQuizTour/" + currentUser,
+                  "http://localhost:3000/quiz/v1/insertQuizTour/" + currentUser,
                   {},
                   { headers: { authorization: "Bearer " + currentUserToken } }
                 );
@@ -46,14 +49,15 @@ const UserSignUp = () => {
                 // clique sur le bouton indiquant que l'utilisatuer veux reprendre son dernier quiz en cours
                 event.preventDefault();
                 const quizTour = await axios.get(
-                  "http://localhost:3000/findQuizTour/" + currentUser,
+                  "http://localhost:3000/quiz/v1/findQuizTour/" + currentUser,
                   { headers: { authorization: "Bearer " + currentUserToken } }
                 );
                 if (quizTour.data) {
                   history.push("/play/quiz");
                 } else {
                   await axios.post(
-                    "http://localhost:3000/insertQuizTour/" + currentUser,
+                    "http://localhost:3000/quiz/v1/insertQuizTour/" +
+                      currentUser,
                     {},
                     { headers: { authorization: "Bearer " + currentUserToken } }
                   );

@@ -30,7 +30,7 @@ const QuizResults = () => {
   const getPillars = async () => {
     // recuperation des pilliers E,S et G
     const getPillars = await axios.get(
-      process.env.REACT_APP_PROD_URL + "/pillar/v1/getPillars"
+      "https://esg-back.herokuapp.com/pillar/v1/getPillars"
     );
 
     return getPillars.data;
@@ -45,8 +45,7 @@ const QuizResults = () => {
       // je crée une variable sum en l'initialisant a zero
       let sum = 0;
       const pillarSummary = await axios.get(
-        process.env.REACT_APP_PROD_URL +
-          "/quiz/v1/getCategoryScoresByPillar/" +
+        "https://esg-back.herokuapp.com/quiz/v1/getCategoryScoresByPillar/" +
           currentUser +
           "/" +
           pillars[i].id
@@ -120,8 +119,7 @@ const QuizResults = () => {
     // j'insere les informations dans la bdd
     for (let i = 0; i < pillarScoresArray.length; i++) {
       await axios.post(
-        process.env.REACT_APP_PROD_URL +
-          "/quiz/v1/insertPillarQuizScores/" +
+        "https://esg-back.herokuapp.com/quiz/v1/insertPillarQuizScores/" +
           quizTour,
         {
           criteria: pillarScoresArray[i].pillar,
@@ -135,9 +133,7 @@ const QuizResults = () => {
 
   const getAggregateQuizScores = async () => {
     const aggregateCategoryScores = await axios.get(
-      process.env.REACT_APP_PROD_URL +
-        "/quiz/v1/getAggregateScores/" +
-        currentUser
+      "https://esg-back.herokuapp.com/quiz/v1/getAggregateScores/" + currentUser
     );
     let sum = 0;
     for (let i = 0; i < aggregateCategoryScores.data.length; i++) {
@@ -187,7 +183,7 @@ const QuizResults = () => {
     setCategoryScores(getCategoryScoreInformation);
 
     const getQuizTour = await axios.get(
-      process.env.REACT_APP_PROD_URL + "/quiz/v1/findQuizTour/" + currentUser
+      "https://esg-back.herokuapp.com/quiz/v1/findQuizTour/" + currentUser
     );
 
     //a partir des donées sur les categories je determine les scores pour les pillars associé aux categories en agregat les "scores" des categories contenu dans le tableau "getCategoryScoreInformation"

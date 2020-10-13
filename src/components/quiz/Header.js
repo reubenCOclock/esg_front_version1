@@ -27,7 +27,7 @@ const Header = () => {
     console.log(process.env.REACT_APP_PROD_URL);
     setIsLoading(false);
     const findUser = await axios.get(
-      process.env.REACT_APP_PROD_URL + "/user/v1/findUserById/" + currentUser
+      "https://esg-back.herokuapp.com/user/v1/findUserById/" + currentUser
     );
     setCurrentUserObj(findUser.data);
 

@@ -22,7 +22,7 @@ const Inscription = () => {
               event.preventDefault();
               console.log("form is submitted");
               const getUserRole = await axios.get(
-                process.env.PROD_URL + "/role/v1/getUserRole"
+                "https://esg-back.herokuapp.com/role/v1/getUserRole"
               );
 
               if (!email) {
@@ -56,7 +56,7 @@ const Inscription = () => {
               console.log("get user role");
 
               const newUser = await axios.post(
-                process.env.PROD_URL + "/user/v1/insert",
+                "https://esg-back.herokuapp.com/user/v1/insert",
                 {
                   email: email,
                   role: getUserRole.data.id,

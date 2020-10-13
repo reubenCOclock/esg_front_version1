@@ -24,9 +24,10 @@ const Header = () => {
   const [refresh, setRefresh] = useState(null);
 
   const getData = async () => {
+    console.log(process.env.REACT_APP_PROD_URL);
     setIsLoading(false);
     const findUser = await axios.get(
-      process.env.PROD_URL + "/user/v1/findUserById/" + currentUser
+      process.env.REACT_APP_PROD_URL + "/user/v1/findUserById/" + currentUser
     );
     setCurrentUserObj(findUser.data);
 

@@ -54,6 +54,7 @@ const Connexion = () => {
                 { email: email, password: password }
               );
               if (getUserInfo.data.id) {
+                console.log("uer is found");
                 sessionStorage.setItem("user", getUserInfo.data.id);
                 sessionStorage.setItem("token", getUserInfo.data.token);
                 //setUserSet(true);

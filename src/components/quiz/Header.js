@@ -25,10 +25,12 @@ const Header = () => {
 
   const getData = async () => {
     setIsLoading(false);
-    const findUser = await axios.get(
-      "https://esg-back.herokuapp.com/user/v1/findUserById/" + currentUser
-    );
-    setCurrentUserObj(findUser.data);
+    if (currentUser) {
+      const findUser = await axios.get(
+        "https://esg-back.herokuapp.com/user/v1/findUserById/" + currentUser
+      );
+      setCurrentUserObj(findUser.data);
+    }
 
     //setRoleObj(findRole.data);
   };

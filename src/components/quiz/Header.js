@@ -38,8 +38,6 @@ const Header = () => {
   }, [refresh]);
   //console.log("here is the session storage information");
   //console.log(sessionStorage.getItem("user"));
-  console.log("here is the current user information");
-  console.log(currentUserObj);
 
   if (isLoading == false) {
     if (currentUserObj.id) {

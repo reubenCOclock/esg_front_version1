@@ -57,7 +57,7 @@ const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link class="link" to="/play/instructions">
+                  <Link class="link" to="/registerEmail">
                     Je Teste Mon Profil
                   </Link>
                 </li>

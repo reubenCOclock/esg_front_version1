@@ -50,7 +50,7 @@ const Connexion = () => {
               }
 
               const getUserInfo = await axios.post(
-                process.env.REACT_APP_PROD_URL + "/user/v1/authentication",
+                "https://esg-back.herokuapp.com/user/v1/authentication",
                 { email: email, password: password }
               );
               if (getUserInfo.data.id) {

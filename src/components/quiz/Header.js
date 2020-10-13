@@ -42,7 +42,7 @@ const Header = () => {
   //console.log(sessionStorage.getItem("user"));
 
   if (isLoading == false) {
-    if (!refresh) {
+    if (currentUser && !refresh) {
       //setRefresh(true);
       return (
         <>

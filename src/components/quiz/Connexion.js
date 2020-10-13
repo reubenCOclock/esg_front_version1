@@ -5,6 +5,7 @@ import axios from "axios";
 import "../../styles/components/connexion.scss";
 
 const Connexion = () => {
+  console.log(process.env.REACT_APP_PROD_URL);
   let history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +50,7 @@ const Connexion = () => {
               }
 
               const getUserInfo = await axios.post(
-                process.env.PROD_URL + "/user/v1/authentication/",
+                process.env.REACT_APP_PROD_URL + "/user/v1/authentication",
                 { email: email, password: password }
               );
               if (getUserInfo.data.id) {

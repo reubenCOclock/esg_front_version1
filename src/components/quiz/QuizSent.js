@@ -22,7 +22,7 @@ const QuizSent = () => {
 
   const getDataWeights = async (userId) => {
     const dataWeights = await axios.get(
-      process.env.PROD_URL + "/aggregateDataWeights/" + userId
+      process.env.REACT_APP_PROD_URL + "/aggregateDataWeights/" + userId
     );
     return dataWeights.data;
   };
@@ -32,7 +32,7 @@ const QuizSent = () => {
     // cette fonction vise a recuperer les information concernant la reponse a une question et les datapoints associé a la question en groupant par des questions associé au criteres E,S et G en bouclant encore sur le tableaux des criteres.
     for (let i = 0; i < criterias.length; i++) {
       const quizResultsByCriteria = await axios.get(
-        process.env.PROD_URL +
+        process.env.REACT_APP_PROD_URL +
           "/groupQuestionsAndAnswers/" +
           criterias[i].ethical_code +
           "/" +
@@ -118,7 +118,7 @@ const QuizSent = () => {
       console.log(percentageAllocationArr[i]);
 
       const insertTour = await axios.post(
-        process.env.PROD_URL +
+        process.env.REACT_APP_PROD_URL +
           "/insertQuizScore/" +
           currentUser +
           "/" +
@@ -144,7 +144,7 @@ const QuizSent = () => {
     quizTour
   ) => {
     const getUserQuizScore = await axios.get(
-      process.env.PROD_URL + "/getQuizScoreByUser/" + userId
+      process.env.REACT_APP_PROD_URL + "/getQuizScoreByUser/" + userId
     );
 
     // si il y a  pas deja des resultats sur le quiz soumi dans la bdd je fais appel a la fonction pour inserer les resultats du quiz
@@ -167,7 +167,7 @@ const QuizSent = () => {
     //const getCriteriaWeights = await getDataWeights(currentUser);
 
     const getQuizTour = await axios.get(
-      process.env.PROD_URL + "/findQuizTour/" + currentUser,
+      process.env.REACT_APP_PROD_URL + "/findQuizTour/" + currentUser,
       { headers: { authorization: "Bearer " + currentUserToken } }
     );
 
@@ -214,7 +214,7 @@ const QuizSent = () => {
                 setOpinionSent(true);
                 console.log("the form has been submitted");
                 await axios.post(
-                  process.env.PROD_URL +
+                  process.env.REACT_APP_PROD_URL +
                     "/insertQuizOpinion/" +
                     quizTour.id +
                     "/" +

@@ -29,7 +29,7 @@ const PlayNew = () => {
 
   const checkQuestionCounterValue = async (counter, questions) => {
     await axios.post(
-      process.env.PROD_URL +
+      process.env.REACT_APP_PROD_URL +
         "/question/v1/insertOrder/" +
         counter +
         "/" +
@@ -51,7 +51,7 @@ const PlayNew = () => {
   const getQuizAnswer = async (quizTourId, answerId) => {
     // appel a la fonction visant a recuperer une reponse selon un quiz un particulier
     const quizAnswer = await axios.get(
-      process.env.PROD_URL +
+      process.env.REACT_APP_PROD_URL +
         "/answer/v1/getQuizAnswer/" +
         quizTourId +
         "/" +
@@ -64,7 +64,7 @@ const PlayNew = () => {
     // insertion d'une question dans la bdd qui correspond a un quiz,une question avec le corps du contenu de la response en "body"
     try {
       const insertedAnswer = await axios.post(
-        process.env.PROD_URL +
+        process.env.REACT_APP_PROD_URL +
           "/answer/v1/insert/" +
           quizTourId +
           "/" +
@@ -81,7 +81,11 @@ const PlayNew = () => {
   const updateAnswer = async (quizTourId, questionId, answer) => {
     // meme logique que pour la fonction insertAnswer sauf que cette fois cest pour mettre la reponse a jour.
     const updatedAnswer = await axios.post(
-      process.env.PROD_URL + "/updateAnswer/" + quizTourId + "/" + questionId,
+      process.env.REACT_APP_PROD_URL +
+        "/updateAnswer/" +
+        quizTourId +
+        "/" +
+        questionId,
       { answer: answer }
     );
 
@@ -90,7 +94,7 @@ const PlayNew = () => {
 
   const getQuestionCriteria = async (questionCounter, questions) => {
     const getQuestionCriteriaById = await axios.get(
-      process.env.PROD_URL +
+      process.env.REACT_APP_PROD_URL +
         "/getQuestionCriteria/" +
         questions[questionCounter - 1].id
     );
@@ -100,7 +104,7 @@ const PlayNew = () => {
   const getQuestionsByCategories = async () => {
     let questionsArray = [];
     const categoryList = await axios.get(
-      process.env.PROD_URL + "/categories/v1/getCategories"
+      process.env.REACT_APP_PROD_URL + "/categories/v1/getCategories"
     );
 
     //je recupere toutes les categories et je boucle dessus
@@ -108,7 +112,7 @@ const PlayNew = () => {
     for (let i = 0; i < categoryList.data.length; i++) {
       // dans la boucle je recupere les questions associé a la categorie
       const getAssociatedQuestions = await axios.get(
-        process.env.PROD_URL +
+        process.env.REACT_APP_PROD_URL +
           "/question/v1/getQuestions/" +
           categoryList.data[i].name
       );
@@ -128,14 +132,18 @@ const PlayNew = () => {
     const currentUser = sessionStorage.getItem("user");
     // recuperation de toutes les questions
     const checkIfAnswers = await axios.get(
-      process.env.PROD_URL + "/answer/v1/checkEmptyAnswers/" + currentUser
+      process.env.REACT_APP_PROD_URL +
+        "/answer/v1/checkEmptyAnswers/" +
+        currentUser
     );
 
     const checkIfTaggedQuestions = await axios.get(
-      process.env.PROD_URL + "/checkIfQuizHasTaggedAnswer/" + currentUser
+      process.env.REACT_APP_PROD_URL +
+        "/checkIfQuizHasTaggedAnswer/" +
+        currentUser
     );
     const currentQuiz = await axios.get(
-      process.env.PROD_URL + "/quiz/v1/findQuizTour/" + currentUser,
+      process.env.REACT_APP_PROD_URL + "/quiz/v1/findQuizTour/" + currentUser,
       { headers: { authorization: "Bearer " + currentUserToken } }
     );
 
@@ -161,7 +169,9 @@ const PlayNew = () => {
 
     // recuperation de toutes les reponses a un quiz en particulier en utilisant la variable "currentQuiz"
     const answersByQuizTour = await axios.get(
-      process.env.PROD_URL + "/answer/v1/getAnswers/" + currentQuiz.data.id
+      process.env.REACT_APP_PROD_URL +
+        "/answer/v1/getAnswers/" +
+        currentQuiz.data.id
     );
 
     // utilisation des hooks pour etablir les etats.
@@ -301,7 +311,7 @@ const PlayNew = () => {
                   onClick={async () => {
                     if (quizTour.is_started == false) {
                       await axios.post(
-                        process.env.PROD_URL +
+                        process.env.REACT_APP_PROD_URL +
                           "/quiz/v1/updateQuizStarted/" +
                           quizTour.id
                       );
@@ -368,7 +378,7 @@ const PlayNew = () => {
                       if (quizSent == true) {
                         // je recupere toutes les reponses vides au quiz sachant que le tableau changera parce ce que on est dans un evenement ou on repond a une question
                         const findUpdatedEmptyQuizAnswers = await axios.get(
-                          process.env.PROD_URL +
+                          process.env.REACT_APP_PROD_URL +
                             "/answer/v1/emptyAnswersByQuizTour/" +
                             currentUser
                         );
@@ -417,7 +427,7 @@ const PlayNew = () => {
                 // si l'utilisateur clique sur le bouton question suivante, le quiz sera automatiquement commencé
                 if (quizTour.is_started == false) {
                   await axios.post(
-                    process.env.PROD_URL +
+                    process.env.REACT_APP_PROD_URL +
                       "/quiz/v1/updateQuizStarted/" +
                       quizTour.id
                   );
@@ -449,7 +459,7 @@ const PlayNew = () => {
                   checkQuestionCounterValue(questionCounter, questions);
                   // je recupere toutes les questions auxquelles il n'y aurai potentiellement pas de reponse.
                   const emptyAnswersByQuizTour = await axios.get(
-                    process.env.PROD_URL +
+                    process.env.REACT_APP_PROD_URL +
                       "/answer/v1/emptyAnswersByQuizTour/" +
                       currentUser
                   );
@@ -477,7 +487,7 @@ const PlayNew = () => {
                   setQuizSent(true);
 
                   const emptyAnswersByQuizTour = await axios.get(
-                    process.env.PROD_URL +
+                    process.env.REACT_APP_PROD_URL +
                       "/answer/v1/emptyAnswersByQuizTour/" +
                       currentUser
                   );

@@ -65,7 +65,7 @@ const QuestionStatistics = () => {
       array.push(totalAnswersByCategory.data);
     }
     const totalTaggedAnswersByQuestion = await axios.get(
-      process.env.PROD_URL + "/totalTaggedByQuestion/" + questionId
+      process.env.REACT_APP_PROD_URL + "/totalTaggedByQuestion/" + questionId
     );
     array.push(totalTaggedAnswersByQuestion.data);
     return array;
@@ -74,12 +74,12 @@ const QuestionStatistics = () => {
   const getData = async () => {
     setIsLoading(false);
     const getQuestionContent = await axios.get(
-      process.env.PROD_URL + "/questionContent/" + questionId
+      process.env.REACT_APP_PROD_URL + "/questionContent/" + questionId
     );
     setQuestionContent(getQuestionContent.data);
 
     const getTotalAnswers = await axios.get(
-      process.env.PROD_URL + "/getAnswerStats/" + questionId
+      process.env.REACT_APP_PROD_URL + "/getAnswerStats/" + questionId
     );
 
     const getTotal = establishTotal(getTotalAnswers);

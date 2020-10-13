@@ -13,7 +13,7 @@ const QuizInstructions = () => (
     <Helmet>
       <title>Quiz Instructions - Quiz App</title>
     </Helmet>
-    <h1> HELLO WORLD</h1>
+
     <div className="instructions container">
       {/* 
       <ul className="browser-default" id="main-list">

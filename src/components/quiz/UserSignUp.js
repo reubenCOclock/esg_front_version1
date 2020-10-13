@@ -33,8 +33,7 @@ const UserSignUp = () => {
                 await axios.post(
                   "https://esg-back.herokuapp.com/quiz/v1/insertQuizTour/" +
                     currentUser,
-                  {},
-                  { headers: { authorization: "Bearer " + currentUserToken } }
+                  {}
                 );
 
                 history.push("/play/quiz");
@@ -51,8 +50,7 @@ const UserSignUp = () => {
                 event.preventDefault();
                 const quizTour = await axios.get(
                   "https://esg-back.herokuapp.com/quiz/v1/findQuizTour/" +
-                    currentUser,
-                  { headers: { authorization: "Bearer " + currentUserToken } }
+                    currentUser
                 );
                 if (quizTour.data) {
                   history.push("/play/quiz");
@@ -60,8 +58,7 @@ const UserSignUp = () => {
                   await axios.post(
                     "https://esg-back.herokuapp.com/quiz/v1/insertQuizTour/" +
                       currentUser,
-                    {},
-                    { headers: { authorization: "Bearer " + currentUserToken } }
+                    {}
                   );
                 }
                 // meme logique q'au dessus saug que cette fois au lieu de creer un nouveau quiz, il reprendra le dernier quiz en cours.

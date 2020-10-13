@@ -29,7 +29,8 @@ const PlayNew = () => {
 
   const checkQuestionCounterValue = async (counter, questions) => {
     await axios.post(
-      "http://localhost:3000/question/v1/insertOrder/" +
+      process.env.PROD_URL +
+        "/question/v1/insertOrder/" +
         counter +
         "/" +
         questions[counter - 1].id
@@ -50,7 +51,8 @@ const PlayNew = () => {
   const getQuizAnswer = async (quizTourId, answerId) => {
     // appel a la fonction visant a recuperer une reponse selon un quiz un particulier
     const quizAnswer = await axios.get(
-      "http://localhost:3000/answer/v1/getQuizAnswer/" +
+      process.env.PROD_URL +
+        "/answer/v1/getQuizAnswer/" +
         quizTourId +
         "/" +
         answerId
@@ -62,7 +64,8 @@ const PlayNew = () => {
     // insertion d'une question dans la bdd qui correspond a un quiz,une question avec le corps du contenu de la response en "body"
     try {
       const insertedAnswer = await axios.post(
-        "http://localhost:3000/answer/v1/insert/" +
+        process.env.PROD_URL +
+          "/answer/v1/insert/" +
           quizTourId +
           "/" +
           questionId,
@@ -78,7 +81,7 @@ const PlayNew = () => {
   const updateAnswer = async (quizTourId, questionId, answer) => {
     // meme logique que pour la fonction insertAnswer sauf que cette fois cest pour mettre la reponse a jour.
     const updatedAnswer = await axios.post(
-      "http://localhost:3000/updateAnswer/" + quizTourId + "/" + questionId,
+      process.env.PROD_URL + "/updateAnswer/" + quizTourId + "/" + questionId,
       { answer: answer }
     );
 
@@ -87,7 +90,8 @@ const PlayNew = () => {
 
   const getQuestionCriteria = async (questionCounter, questions) => {
     const getQuestionCriteriaById = await axios.get(
-      "http://localhost:3000/getQuestionCriteria/" +
+      process.env.PROD_URL +
+        "/getQuestionCriteria/" +
         questions[questionCounter - 1].id
     );
     setQuestionCriteria(getQuestionCriteriaById.data);
@@ -96,7 +100,7 @@ const PlayNew = () => {
   const getQuestionsByCategories = async () => {
     let questionsArray = [];
     const categoryList = await axios.get(
-      "http://localhost:3000/categories/v1/getCategories"
+      process.env.PROD_URL + "/categories/v1/getCategories"
     );
 
     //je recupere toutes les categories et je boucle dessus
@@ -104,7 +108,8 @@ const PlayNew = () => {
     for (let i = 0; i < categoryList.data.length; i++) {
       // dans la boucle je recupere les questions associé a la categorie
       const getAssociatedQuestions = await axios.get(
-        "http://localhost:3000/question/v1/getQuestions/" +
+        process.env.PROD_URL +
+          "/question/v1/getQuestions/" +
           categoryList.data[i].name
       );
       // dans une boucle imbriqué sur les questions associé aux categories, je construit le tableau questionsArray en mettant les questions associés
@@ -123,14 +128,14 @@ const PlayNew = () => {
     const currentUser = sessionStorage.getItem("user");
     // recuperation de toutes les questions
     const checkIfAnswers = await axios.get(
-      "http://localhost:3000/answer/v1/checkEmptyAnswers/" + currentUser
+      process.env.PROD_URL + "/answer/v1/checkEmptyAnswers/" + currentUser
     );
 
     const checkIfTaggedQuestions = await axios.get(
-      "http://localhost:3000/checkIfQuizHasTaggedAnswer/" + currentUser
+      process.env.PROD_URL + "/checkIfQuizHasTaggedAnswer/" + currentUser
     );
     const currentQuiz = await axios.get(
-      "http://localhost:3000/quiz/v1/findQuizTour/" + currentUser,
+      process.env.PROD_URL + "/quiz/v1/findQuizTour/" + currentUser,
       { headers: { authorization: "Bearer " + currentUserToken } }
     );
 
@@ -156,7 +161,7 @@ const PlayNew = () => {
 
     // recuperation de toutes les reponses a un quiz en particulier en utilisant la variable "currentQuiz"
     const answersByQuizTour = await axios.get(
-      "http://localhost:3000/answer/v1/getAnswers/" + currentQuiz.data.id
+      process.env.PROD_URL + "/answer/v1/getAnswers/" + currentQuiz.data.id
     );
 
     // utilisation des hooks pour etablir les etats.
@@ -296,7 +301,8 @@ const PlayNew = () => {
                   onClick={async () => {
                     if (quizTour.is_started == false) {
                       await axios.post(
-                        "http://localhost:3000/quiz/v1/updateQuizStarted/" +
+                        process.env.PROD_URL +
+                          "/quiz/v1/updateQuizStarted/" +
                           quizTour.id
                       );
                     }
@@ -362,7 +368,8 @@ const PlayNew = () => {
                       if (quizSent == true) {
                         // je recupere toutes les reponses vides au quiz sachant que le tableau changera parce ce que on est dans un evenement ou on repond a une question
                         const findUpdatedEmptyQuizAnswers = await axios.get(
-                          "http://localhost:3000/answer/v1/emptyAnswersByQuizTour/" +
+                          process.env.PROD_URL +
+                            "/answer/v1/emptyAnswersByQuizTour/" +
                             currentUser
                         );
 
@@ -410,7 +417,8 @@ const PlayNew = () => {
                 // si l'utilisateur clique sur le bouton question suivante, le quiz sera automatiquement commencé
                 if (quizTour.is_started == false) {
                   await axios.post(
-                    "http://localhost:3000/quiz/v1/updateQuizStarted/" +
+                    process.env.PROD_URL +
+                      "/quiz/v1/updateQuizStarted/" +
                       quizTour.id
                   );
                 }
@@ -441,7 +449,8 @@ const PlayNew = () => {
                   checkQuestionCounterValue(questionCounter, questions);
                   // je recupere toutes les questions auxquelles il n'y aurai potentiellement pas de reponse.
                   const emptyAnswersByQuizTour = await axios.get(
-                    "http://localhost:3000/answer/v1/emptyAnswersByQuizTour/" +
+                    process.env.PROD_URL +
+                      "/answer/v1/emptyAnswersByQuizTour/" +
                       currentUser
                   );
 
@@ -468,7 +477,8 @@ const PlayNew = () => {
                   setQuizSent(true);
 
                   const emptyAnswersByQuizTour = await axios.get(
-                    "http://localhost:3000/answer/v1/emptyAnswersByQuizTour/" +
+                    process.env.PROD_URL +
+                      "/answer/v1/emptyAnswersByQuizTour/" +
                       currentUser
                   );
 

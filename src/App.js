@@ -15,6 +15,7 @@ import QuestionStatistics from "./components/quiz/QuestionStatistics";
 import Inscription from "./components/quiz/Inscription";
 import Connexion from "./components/quiz/Connexion";
 import QuizResults from "./components/quiz/QuizResults";
+import BarChart from "./components/quiz/BarChart";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Router>
         <Header />
         <Switch>
+          <Route path="/barchart" exact component={BarChart} />
           <Route path="/registerEmail" exact component={UserSignUp} />
           <Route path="/" exact component={Home} />
           <Route path="/play/instructions" exact component={QuizInstructions} />

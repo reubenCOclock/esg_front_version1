@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../styles/components/quiz-sent.scss";
 import { PieChart } from "react-minimal-pie-chart";
+import DonutChart from "react-svg-donut";
+import BarChart from "./BarChart";
 
 const QuizResults = () => {
   let currentUser = sessionStorage.getItem("user");
@@ -23,10 +25,12 @@ const QuizResults = () => {
 
   const [opinionSent, setOpinionSent] = useState(false);
 
+  const [categorySum, setCategorySum] = useState(0);
+  const [pillarSum, setPillarSum] = useState(0);
   const getPillars = async () => {
     // recuperation des pilliers E,S et G
     const getPillars = await axios.get(
-      "http://localhost:3000/pillar/v1/getPillars"
+      process.env.PROD_URL + "/pillar/v1/getPillars"
     );
 
     return getPillars.data;
@@ -41,7 +45,10 @@ const QuizResults = () => {
       // je crée une variable sum en l'initialisant a zero
       let sum = 0;
       const pillarSummary = await axios.get(
-        "http://localhost:3000/quiz/v1/getCategoryScoresByPillar/" +
+        process.env.PROD_URL +
+          "/quiz/v1/getCategoryScoresByPillar/" +
+          currentUser +
+          "/" +
           pillars[i].id
       );
 
@@ -113,7 +120,7 @@ const QuizResults = () => {
     // j'insere les informations dans la bdd
     for (let i = 0; i < pillarScoresArray.length; i++) {
       await axios.post(
-        "http://localhost:3000/quiz/v1/insertPillarQuizScores/" + quizTour,
+        process.env.PROD_URL + "/quiz/v1/insertPillarQuizScores/" + quizTour,
         {
           criteria: pillarScoresArray[i].pillar,
           score: pillarScoresArray[i].score,
@@ -126,13 +133,34 @@ const QuizResults = () => {
 
   const getAggregateQuizScores = async () => {
     const aggregateCategoryScores = await axios.get(
-      "http://localhost:3000/quiz/v1/getAggregateScores"
+      process.env.PROD_URL + "/quiz/v1/getAggregateScores/" + currentUser
     );
     let sum = 0;
     for (let i = 0; i < aggregateCategoryScores.data.length; i++) {
+      console.log("this is the multiplications result");
+      console.log(i);
+      console.log(aggregateCategoryScores.data[i].muliplication_result);
       sum += aggregateCategoryScores.data[i].muliplication_result;
     }
     return sum.toFixed(2);
+  };
+
+  const determineCategorySum = (categoriesArray) => {
+    let sum = 0;
+    for (let i = 0; i < categoriesArray.length; i++) {
+      for (let j = 0; j < categoriesArray[i].categoryArray.length; j++) {
+        sum += categoriesArray[i].categoryArray[j].categoryProportion;
+      }
+    }
+    return sum;
+  };
+
+  const determinePillarSum = (pillarArray) => {
+    let sum = 0;
+    for (let i = 0; i < pillarArray.length; i++) {
+      sum += pillarArray[i].score;
+    }
+    return sum;
   };
 
   const getData = async () => {
@@ -155,7 +183,7 @@ const QuizResults = () => {
     setCategoryScores(getCategoryScoreInformation);
 
     const getQuizTour = await axios.get(
-      "http://localhost:3000/quiz/v1/findQuizTour/" + currentUser
+      process.env.PROD_URL + "/quiz/v1/findQuizTour/" + currentUser
     );
 
     //a partir des donées sur les categories je determine les scores pour les pillars associé aux categories en agregat les "scores" des categories contenu dans le tableau "getCategoryScoreInformation"
@@ -164,20 +192,32 @@ const QuizResults = () => {
       getQuizTour.data.id
     );
 
-    //console.log("here is the pillar score information");
-    //console.log(getFinalPillarScores);
     // creation de l'etat
     setFinalPillarScores(getFinalPillarScores);
 
     const getAggregateScore = await getAggregateQuizScores();
 
-    console.log("final quiz score");
-    console.log(getAggregateScore);
-
     setFinalAggregateScore(getAggregateScore);
+
+    const getCategorySum = await determineCategorySum(
+      getCategoryScoreInformation
+    );
+    setCategorySum(getCategorySum);
+
+    const getPillarSum = await determinePillarSum(getFinalPillarScores);
+    setPillarSum(getPillarSum);
 
     setQuizTour(getQuizTour.data);
   };
+
+  console.log("here are the category scores");
+  console.log(categoryScores);
+
+  //console.log("final pillar scores");
+  //console.log(finalPillarScores);
+
+  console.log("here is the category sum");
+  console.log(categorySum);
 
   useEffect(() => {
     getData();
@@ -186,7 +226,6 @@ const QuizResults = () => {
   if (isLoading == false) {
     return (
       <>
-        ;
         <div class="containter">
           <div class="result-box">
             <div class="quiz-sent-cont">
@@ -200,12 +239,13 @@ const QuizResults = () => {
             <div class="score-results">
               {categoryScores.map((elementArray) => {
                 return elementArray.categoryArray.map((element) => {
+                  const elementScore = element.categoryProportion * 100;
                   return (
                     <div class="score-results-cont padding-box">
                       <div class="font-bold"> {element.category}</div>
                       <div class="align-self-score font-bold">
                         {" "}
-                        {element.categoryProportion.toFixed(2) * 100} %
+                        {elementScore.toFixed(2)} %
                       </div>
                     </div>
                   );
@@ -220,12 +260,13 @@ const QuizResults = () => {
               {finalPillarScores.map((element) => {
                 //console.log("here is the element");
                 //console.log(element);
+                const elementScore = element.score * 100;
                 return (
                   <div class="score-results-cont padding-box">
                     <div class="font-bold"> {element.pillar}</div>
                     <div class="align-self-score font-bold">
                       {" "}
-                      {element.score.toFixed(2) * 100}%{" "}
+                      {elementScore.toFixed(2)}%{" "}
                     </div>
                   </div>
                 );
@@ -256,39 +297,8 @@ const QuizResults = () => {
               {" "}
               Partager Votre avis sur ce questionnaire
             </div>
-            <form
-              onSubmit={async (event) => {
-                event.preventDefault();
-                setOpinionSent(true);
-                //console.log("the form has been submitted");
-                await axios.post(
-                  "http://localhost:3000/insertQuizOpinion/" +
-                    quizTour.id +
-                    "/" +
-                    currentUser,
-                  { opinion: opinion }
-                );
-                document.querySelector(".textarea").value = "";
-              }}
-              method="post"
-              action=""
-            >
-              <div class="flex-text-area">
-                <textarea
-                  class="textarea"
-                  onChange={(event) => {
-                    setOpinion(event.target.value);
-                  }}
-                ></textarea>
-              </div>
 
-              <div class="btn-cont">
-                <button class="send-opinion-btn" type="submit">
-                  {" "}
-                  Envoyer Votre Avis
-                </button>
-              </div>
-            </form>
+            <BarChart categories={categoryScores} sum={categorySum} />
           </div>
         </div>
       </>

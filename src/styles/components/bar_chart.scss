@@ -1,0 +1,35 @@
+@import "../base/settings.scss";
+
+.title-holder {
+  height: 50px;
+  border: 1px solid black;
+}
+
+.bar-chart-title {
+  line-height: 50px;
+  width: 200px;
+}
+
+.flex-bar-chart-items {
+  display: flex;
+}
+
+.bar {
+  background: lightgreen;
+  border: 1px solid black;
+}
+
+.bar-text {
+  line-height: 50px;
+  margin-left: 10px;
+}
+
+.flex-bar-charts {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.flex-bar-chart-center {
+  display: flex;
+  flex-direction: column;
+}

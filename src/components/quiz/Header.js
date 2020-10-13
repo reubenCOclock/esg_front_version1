@@ -26,7 +26,7 @@ const Header = () => {
   const getData = async () => {
     setIsLoading(false);
     const findUser = await axios.get(
-      "http://localhost:3000/user/v1/findUserById/" + currentUser
+      process.env.PROD_URL + "/user/v1/findUserById/" + currentUser
     );
     setCurrentUserObj(findUser.data);
 

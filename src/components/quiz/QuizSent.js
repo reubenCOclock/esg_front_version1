@@ -22,7 +22,7 @@ const QuizSent = () => {
 
   const getDataWeights = async (userId) => {
     const dataWeights = await axios.get(
-      "http://localhost:3000/aggregateDataWeights/" + userId
+      process.env.PROD_URL + "/aggregateDataWeights/" + userId
     );
     return dataWeights.data;
   };
@@ -32,7 +32,8 @@ const QuizSent = () => {
     // cette fonction vise a recuperer les information concernant la reponse a une question et les datapoints associé a la question en groupant par des questions associé au criteres E,S et G en bouclant encore sur le tableaux des criteres.
     for (let i = 0; i < criterias.length; i++) {
       const quizResultsByCriteria = await axios.get(
-        "http://localhost:3000/groupQuestionsAndAnswers/" +
+        process.env.PROD_URL +
+          "/groupQuestionsAndAnswers/" +
           criterias[i].ethical_code +
           "/" +
           currentUser
@@ -117,7 +118,8 @@ const QuizSent = () => {
       console.log(percentageAllocationArr[i]);
 
       const insertTour = await axios.post(
-        "http://localhost:3000/insertQuizScore/" +
+        process.env.PROD_URL +
+          "/insertQuizScore/" +
           currentUser +
           "/" +
           currentQuiz,
@@ -142,7 +144,7 @@ const QuizSent = () => {
     quizTour
   ) => {
     const getUserQuizScore = await axios.get(
-      "http://localhost:3000/getQuizScoreByUser/" + userId
+      process.env.PROD_URL + "/getQuizScoreByUser/" + userId
     );
 
     // si il y a  pas deja des resultats sur le quiz soumi dans la bdd je fais appel a la fonction pour inserer les resultats du quiz
@@ -165,7 +167,7 @@ const QuizSent = () => {
     //const getCriteriaWeights = await getDataWeights(currentUser);
 
     const getQuizTour = await axios.get(
-      "http://localhost:3000/findQuizTour/" + currentUser,
+      process.env.PROD_URL + "/findQuizTour/" + currentUser,
       { headers: { authorization: "Bearer " + currentUserToken } }
     );
 
@@ -181,7 +183,7 @@ const QuizSent = () => {
   if (isLoading == false) {
     return (
       <>
-        <div class="containter">
+        <div class="container">
           <div class="result-box">
             <div class="quiz-sent-cont">
               <div class="quiz-sent-msg">
@@ -212,7 +214,8 @@ const QuizSent = () => {
                 setOpinionSent(true);
                 console.log("the form has been submitted");
                 await axios.post(
-                  "http://localhost:3000/insertQuizOpinion/" +
+                  process.env.PROD_URL +
+                    "/insertQuizOpinion/" +
                     quizTour.id +
                     "/" +
                     currentUser,

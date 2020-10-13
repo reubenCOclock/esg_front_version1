@@ -49,7 +49,7 @@ const Connexion = () => {
               }
 
               const getUserInfo = await axios.post(
-                "http://localhost:3000/user/v1/authentication/",
+                process.env.PROD_URL + "/user/v1/authentication/",
                 { email: email, password: password }
               );
               if (getUserInfo.data.id) {

@@ -31,7 +31,9 @@ const UserSignUp = () => {
                 // clique sur le bouton si l'utilisateur veux commencer un nouveau quiz
                 event.preventDefault();
                 await axios.post(
-                  "http://localhost:3000/quiz/v1/insertQuizTour/" + currentUser,
+                  process.env.PROD_URL +
+                    "/quiz/v1/insertQuizTour/" +
+                    currentUser,
                   {},
                   { headers: { authorization: "Bearer " + currentUserToken } }
                 );
@@ -49,14 +51,15 @@ const UserSignUp = () => {
                 // clique sur le bouton indiquant que l'utilisatuer veux reprendre son dernier quiz en cours
                 event.preventDefault();
                 const quizTour = await axios.get(
-                  "http://localhost:3000/quiz/v1/findQuizTour/" + currentUser,
+                  process.env.PROD_URL + "/quiz/v1/findQuizTour/" + currentUser,
                   { headers: { authorization: "Bearer " + currentUserToken } }
                 );
                 if (quizTour.data) {
                   history.push("/play/quiz");
                 } else {
                   await axios.post(
-                    "http://localhost:3000/quiz/v1/insertQuizTour/" +
+                    process.env.PROD_URL +
+                      "/quiz/v1/insertQuizTour/" +
                       currentUser,
                     {},
                     { headers: { authorization: "Bearer " + currentUserToken } }

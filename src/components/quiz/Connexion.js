@@ -5,7 +5,6 @@ import axios from "axios";
 import "../../styles/components/connexion.scss";
 
 const Connexion = () => {
-  console.log(process.env.REACT_APP_PROD_URL);
   let history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

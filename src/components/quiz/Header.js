@@ -42,7 +42,7 @@ const Header = () => {
   //console.log(sessionStorage.getItem("user"));
 
   if (isLoading == false) {
-    if (currentUserObj.id) {
+    if (!refresh) {
       //setRefresh(true);
       return (
         <>
@@ -71,6 +71,7 @@ const Header = () => {
                 <li>
                   <Link
                     onClick={() => {
+                      console.log("disconnect link clicked");
                       sessionStorage.clear();
                       history.push("/");
                       setRefresh(true);
@@ -132,6 +133,7 @@ const Header = () => {
                         <li>
                           <Link
                             onClick={() => {
+                              setRefresh(true);
                               sessionStorage.clear();
                               history.push("/");
                               setCurrentUserObj("");
